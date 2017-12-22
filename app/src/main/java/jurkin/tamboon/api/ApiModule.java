@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
+import dagger.Module;
 import dagger.Provides;
 import io.reactivex.schedulers.Schedulers;
 import jurkin.tamboon.App;
@@ -19,6 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Andrej Jurkin on 12/22/17.
  */
 
+@Module
 public class ApiModule {
 
     private static final int OK_HTTP_CACHE_SIZE = 10 * 1024 * 1024;
@@ -54,7 +56,7 @@ public class ApiModule {
     @Singleton
     Retrofit provideRetrofit(Gson gson, OkHttpClient client) {
         return new Retrofit.Builder()
-                .baseUrl("http://go.udacity.com/")
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory
                         .createWithScheduler(Schedulers.newThread()))
