@@ -6,6 +6,8 @@ import jurkin.tamboon.MainActivity;
 import jurkin.tamboon.view.charitylist.CharityListFragment;
 
 /**
+ * The UiModule contains UI dependencies needed for the injection of Android UI components
+ *
  * Created by Andrej Jurkin on 12/22/17.
  */
 

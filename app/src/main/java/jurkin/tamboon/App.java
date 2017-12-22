@@ -9,8 +9,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import jurkin.tamboon.api.ApiModule;
-import jurkin.tamboon.injection.component.AppComponent;
+import jurkin.tamboon.injection.module.ApiModule;
 import jurkin.tamboon.injection.component.DaggerAppComponent;
 import jurkin.tamboon.injection.module.AppModule;
 

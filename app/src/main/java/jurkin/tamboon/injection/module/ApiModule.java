@@ -1,4 +1,4 @@
-package jurkin.tamboon.api;
+package jurkin.tamboon.injection.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,6 +9,8 @@ import dagger.Module;
 import dagger.Provides;
 import io.reactivex.schedulers.Schedulers;
 import jurkin.tamboon.App;
+import jurkin.tamboon.api.OmiseService;
+import jurkin.tamboon.api.Repository;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -17,6 +19,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
+ * The api module contains API related dependencies and remote data sources.
+ *
  * Created by Andrej Jurkin on 12/22/17.
  */
 
@@ -27,6 +31,11 @@ public class ApiModule {
 
     private String baseUrl;
 
+    /**
+     * Construct ApiModule with the base url for all networking requests
+     *
+     * @param baseUrl The base url for all networking requests used to build retrofit and services
+     */
     public ApiModule(String baseUrl) {
         this.baseUrl = baseUrl;
     }
@@ -68,5 +77,11 @@ public class ApiModule {
     @Singleton
     OmiseService provideOmiseService(Retrofit retrofit) {
         return retrofit.create(OmiseService.class);
+    }
+
+    @Provides
+    @Singleton
+    Repository provideRepository(OmiseService omiseService) {
+        return new Repository(omiseService);
     }
 }

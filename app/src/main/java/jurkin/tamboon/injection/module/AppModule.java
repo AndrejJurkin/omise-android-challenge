@@ -9,6 +9,8 @@ import dagger.Provides;
 import jurkin.tamboon.App;
 
 /**
+ * The base app module contains Application dependencies
+ *
  * Created by Andrej Jurkin on 12/22/17.
  */
 
