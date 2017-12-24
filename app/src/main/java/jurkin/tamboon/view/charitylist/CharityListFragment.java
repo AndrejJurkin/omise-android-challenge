@@ -9,4 +9,5 @@ import jurkin.tamboon.view.BaseFragment;
 public class CharityListFragment extends BaseFragment {
 
 
+
 }
