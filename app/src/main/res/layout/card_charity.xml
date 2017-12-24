@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/charity_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="fitStart"
@@ -35,6 +35,7 @@
             tools:layout_editor_absoluteX="16dp">
 
             <TextView
+                android:id="@+id/charity_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -43,6 +44,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <Button
+                android:id="@+id/donate_button"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
