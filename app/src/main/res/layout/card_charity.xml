@@ -16,7 +16,7 @@
             android:id="@+id/charity_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="fitStart"
+            android:scaleType="fitCenter"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +31,7 @@
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image"
+            app:layout_constraintTop_toBottomOf="@+id/charity_image"
             tools:layout_editor_absoluteX="16dp">
 
             <TextView

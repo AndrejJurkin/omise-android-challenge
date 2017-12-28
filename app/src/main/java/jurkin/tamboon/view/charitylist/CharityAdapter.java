@@ -52,12 +52,27 @@ public class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHold
 
         Glide.with(holder.itemView.getContext())
                 .load(charity.getLogoUrl())
+                .placeholder(R.drawable.placeholder)
                 .into(holder.charityImage);
     }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    /**
+     * Update adapter data and notify changes
+     *
+     * @param data The new charity data
+     */
+    public void setData(@Nullable List<Charity> data) {
+        if (data == null) {
+            data = new ArrayList<>();
+        }
+
+        this.data = data;
+        this.notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
