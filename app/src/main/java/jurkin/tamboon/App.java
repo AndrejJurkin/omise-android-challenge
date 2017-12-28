@@ -9,8 +9,8 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import jurkin.tamboon.injection.module.ApiModule;
 import jurkin.tamboon.injection.component.DaggerAppComponent;
+import jurkin.tamboon.injection.module.ApiModule;
 import jurkin.tamboon.injection.module.AppModule;
 
 /**
@@ -32,7 +32,6 @@ public class App extends Application implements HasActivityInjector, HasSupportF
         super.onCreate();
 
         DaggerAppComponent.builder()
-                .app(this)
                 .appModule(new AppModule(this))
                 .apiModule(new ApiModule(BASE_URL))
                 .build()

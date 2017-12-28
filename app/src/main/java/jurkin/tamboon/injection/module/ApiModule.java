@@ -63,6 +63,14 @@ public class ApiModule {
 
     @Provides
     @Singleton
+    HttpLoggingInterceptor provideHttpLoggingInterceptor() {
+        final HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return httpLoggingInterceptor;
+    }
+
+    @Provides
+    @Singleton
     Retrofit provideRetrofit(Gson gson, OkHttpClient client) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)

@@ -9,6 +9,7 @@ import jurkin.tamboon.injection.module.ApiModule;
 import jurkin.tamboon.App;
 import jurkin.tamboon.injection.module.AppModule;
 import jurkin.tamboon.injection.module.UiModule;
+import jurkin.tamboon.injection.module.ViewModelModule;
 
 /**
  * The AppComponent contains all dependencies that we need to initialize during the app start-up.
@@ -21,6 +22,7 @@ import jurkin.tamboon.injection.module.UiModule;
         AndroidInjectionModule.class,
         AppModule.class,
         ApiModule.class,
+        ViewModelModule.class,
         UiModule.class
 })
 public interface AppComponent {
@@ -28,12 +30,9 @@ public interface AppComponent {
     @Component.Builder
     interface Builder {
 
-        @BindsInstance
-        Builder app(App app);
+        Builder appModule(AppModule appModule);
 
         Builder apiModule(ApiModule apiModule);
-
-        Builder appModule(AppModule appModule);
 
         AppComponent build();
     }
