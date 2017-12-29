@@ -24,17 +24,23 @@ import jurkin.tamboon.model.Charity;
  * Created by Andrej Jurkin on 12/22/17.
  */
 
-public class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHolder> {
+class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHolder> {
+
+    /**
+     * The item view callback interface
+     */
+    interface OnItemClickListener {
+        void onItemClick(Charity charity);
+    }
 
     @NonNull
     private List<Charity> data;
 
-    public CharityAdapter(@Nullable List<Charity> data) {
-        if (data == null) {
-            data = new ArrayList<>();
-        }
+    @Nullable
+    private OnItemClickListener onItemClickListener;
 
-        this.data = data;
+    CharityAdapter(@Nullable List<Charity> data) {
+        setData(data);
     }
 
     @Override
@@ -47,13 +53,19 @@ public class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Charity charity = data.get(position);
+        final Charity charity = data.get(position);
         holder.charityName.setText(charity.getName());
 
         Glide.with(holder.itemView.getContext())
                 .load(charity.getLogoUrl())
-                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.ic_placeholder)
                 .into(holder.charityImage);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(charity);
+            }
+        });
     }
 
     @Override
@@ -73,6 +85,10 @@ public class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHold
 
         this.data = data;
         this.notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

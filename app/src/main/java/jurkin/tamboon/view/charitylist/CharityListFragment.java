@@ -21,7 +21,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import jurkin.tamboon.R;
 import jurkin.tamboon.model.Charity;
+import jurkin.tamboon.model.Donation;
 import jurkin.tamboon.view.BaseFragment;
+import jurkin.tamboon.view.donation.DonationActivity;
 
 /**
  * Created by Andrej Jurkin on 12/21/17.
@@ -114,9 +116,8 @@ public class CharityListFragment extends BaseFragment {
     }
 
     private void bindAdapterClickListener() {
-        this.adapter.setOnItemClickListener(charity -> {
-            // TODO: Handle item click
-        });
+        this.adapter.setOnItemClickListener(charity ->
+                DonationActivity.start(getActivity(), charity));
     }
 
     private void stopLoading() {

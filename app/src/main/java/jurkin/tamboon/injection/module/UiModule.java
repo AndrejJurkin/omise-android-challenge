@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import jurkin.tamboon.MainActivity;
 import jurkin.tamboon.view.charitylist.CharityListFragment;
+import jurkin.tamboon.view.donation.DonationFragment;
 
 /**
  * The UiModule contains UI dependencies needed for the injection of Android UI components
@@ -19,4 +20,7 @@ public abstract class UiModule {
 
     @ContributesAndroidInjector
     abstract CharityListFragment contributeCharityListFragment();
+
+    @ContributesAndroidInjector
+    abstract DonationFragment contributeDOnationFragment();
 }
