@@ -1,5 +1,6 @@
 package jurkin.tamboon.view.charitylist;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import jurkin.tamboon.R;
+import jurkin.tamboon.model.Charity;
 import jurkin.tamboon.view.BaseFragment;
 
 /**
@@ -70,6 +72,8 @@ public class CharityListFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         bindData();
+        bindViewModelState();
+        bindAdapterClickListener();
     }
 
     private void bindData() {
@@ -83,5 +87,51 @@ public class CharityListFragment extends BaseFragment {
                 });
 
         disposables.add(subscription);
+    }
+
+    private void bindViewModelState() {
+        Disposable subscription = this.viewModel.getViewModelState()
+                .subscribe(viewModelState -> {
+                    switch (viewModelState) {
+                        case Loaded:
+                            stopLoading();
+                            break;
+                        case Loading:
+                            startLoading();
+                            break;
+                        case Empty:
+                            showEmptyState();
+                            break;
+                        case Error:
+                            // Falls through
+                        default:
+                            showLoadingError();
+                            break;
+                    }
+                });
+
+        disposables.add(subscription);
+    }
+
+    private void bindAdapterClickListener() {
+        this.adapter.setOnItemClickListener(charity -> {
+            // TODO: Handle item click
+        });
+    }
+
+    private void stopLoading() {
+        // TODO: Stop loading
+    }
+
+    private void startLoading() {
+        // TODO: Start loading
+    }
+
+    private void showLoadingError() {
+        // TODO: Show loading error
+    }
+
+    private void showEmptyState() {
+        // TODO: show empty state
     }
 }
