@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.donation.DonationActivity" />
+        <activity android:name=".view.donation.DonationActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

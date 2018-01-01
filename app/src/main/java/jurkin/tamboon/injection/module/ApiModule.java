@@ -1,10 +1,15 @@
 package jurkin.tamboon.injection.module;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.security.GeneralSecurityException;
+
 import javax.inject.Singleton;
 
+import co.omise.android.Client;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.schedulers.Schedulers;
@@ -26,18 +31,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class ApiModule {
+    private static final String TAG = "ApiModule";
 
     private static final int OK_HTTP_CACHE_SIZE = 10 * 1024 * 1024;
 
     private String baseUrl;
 
+    private String publicKey;
+
     /**
      * Construct ApiModule with the base url for all networking requests
      *
      * @param baseUrl The base url for all networking requests used to build retrofit and services
+     * @param publicKey The public Omise API key
      */
-    public ApiModule(String baseUrl) {
+    public ApiModule(String baseUrl, String publicKey) {
         this.baseUrl = baseUrl;
+        this.publicKey = publicKey;
     }
 
     @Provides
@@ -89,7 +99,17 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    Repository provideRepository(OmiseService omiseService) {
-        return new Repository(omiseService);
+    Repository provideRepository(OmiseService omiseService, Client client) {
+        return new Repository(omiseService, client);
+    }
+
+    @Provides
+    @Singleton
+    Client provideOmiseClient() {
+        try {
+            return new Client(publicKey);
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException("Omise client could not be instantiated.", e);
+        }
     }
 }
