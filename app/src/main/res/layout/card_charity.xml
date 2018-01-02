@@ -19,6 +19,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_placeholder"
+            android:transitionName="@string/transition_charity_image"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,6 +41,7 @@
                 android:layout_weight="3"
                 android:padding="@dimen/padding_default"
                 android:text="Charity Name"
+                android:transitionName="@string/transition_charity_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <Button
@@ -49,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_default"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:text="@string/donate" />
         </LinearLayout>
 

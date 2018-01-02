@@ -1,4 +1,13 @@
 <resources>
+    <string name="transition_charity_name" translatable="false">transition_charity_name</string>
+    <string name="transition_charity_image" translatable="false">transition_charity_image</string>
+
     <string name="app_name">Tamboon</string>
     <string name="donate">Donate</string>
+    <string name="donation_amount">Donation Amount (THB)</string>
+    <string name="card_number">Card Number</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="cvc_number">CVC</string>
+    <string name="cardholder_name">Cardholder Name</string>
+
 </resources>
