@@ -10,6 +10,8 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
+ * Omise API interface that is used to create a Retrofit service, which is accessing the REST API
+ *
  * Created by Andrej Jurkin on 12/21/17.
  */
 

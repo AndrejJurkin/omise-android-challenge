@@ -3,6 +3,7 @@ package jurkin.tamboon.view.donation;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,7 +20,9 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import co.omise.android.ui.CreditCardEditText;
+import io.reactivex.disposables.Disposable;
 import jurkin.tamboon.R;
 import jurkin.tamboon.util.SimpleTextWatcher;
 import jurkin.tamboon.model.Charity;
@@ -30,7 +33,6 @@ import jurkin.tamboon.view.BaseFragment;
  */
 
 public class DonationFragment extends BaseFragment {
-
     private static final String TAG = "DonationFragment";
 
     @BindView(R.id.root)
@@ -41,6 +43,9 @@ public class DonationFragment extends BaseFragment {
 
     @BindView(R.id.charity_name)
     TextView charityName;
+
+    @BindView(R.id.donation_amount)
+    TextInputEditText donationAmount;
 
     @BindView(R.id.card_number)
     CreditCardEditText cardNumber;
@@ -53,6 +58,9 @@ public class DonationFragment extends BaseFragment {
 
     @BindView(R.id.expiry_date)
     TextInputEditText expiryDate;
+
+    @BindView(R.id.donate_button)
+    AppCompatButton donateButton;
 
     private DonationViewModel viewModel;
 
@@ -87,16 +95,42 @@ public class DonationFragment extends BaseFragment {
                 .load(viewModel.getMainImageUrl())
                 .into(charityImage);
 
+        // Donate button is disabled by default
+        donateButton.setEnabled(false);
+
+        // Add text watchers
+        donationAmount.addTextChangedListener(donationAmountTextWatcher);
         cardNumber.addTextChangedListener(cardNumberTextWatcher);
         expiryDate.addTextChangedListener(expiryDateTextWatcher);
         cvc.addTextChangedListener(cvcTextWatcher);
+        cardholderName.addTextChangedListener(cardholderNameTextWatcher);
         cardholderName.setOnEditorActionListener(editorListener);
+
+        Disposable donateButtonSubscription = viewModel.isDonateButtonEnabled()
+                .subscribe(enabled -> this.donateButton.setEnabled(enabled));
+        disposables.add(donateButtonSubscription);
     }
+
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.donate_button)
+    public void onDonationButtonClick() {
+        this.viewModel.donate();
+    }
+
+    /*
+     * Text watcher that updates view model when donation amount value changes
+     */
+    private TextWatcher donationAmountTextWatcher = new SimpleTextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            viewModel.setAmount(s.toString());
+        }
+    };
 
     /*
      * Text watcher that automatically requests a next focus
      * after the credit card number has been filled in
-     * and propagates the change to the view model
      */
     private TextWatcher cardNumberTextWatcher = new SimpleTextWatcher() {
         @Override
@@ -104,12 +138,13 @@ public class DonationFragment extends BaseFragment {
             if (s.length() == 19) {
                 expiryDate.requestFocus();
             }
+            viewModel.setCardNumber(s.toString());
         }
     };
 
     /*
-     * Text watcher that formats a number input into a mm/yy format
-     * and propagates the change to the view model
+     * Text watcher that formats a number input into a mm/yy format,requests a next focus and
+     * updates view model when expiry date value changes
      */
     private TextWatcher expiryDateTextWatcher = new SimpleTextWatcher() {
 
@@ -136,12 +171,13 @@ public class DonationFragment extends BaseFragment {
             if (s.length() == 5) {
                 cvc.requestFocus();
             }
+            viewModel.setExpiryDate(s.toString());
         }
     };
 
     /*
-     * Text watcher that automatically requests a next focus
-     * and propagates the change to the view model
+     * Text watcher that automatically requests a next focus when the cvc code is filled
+     * and updates view model when cvc value changes
      */
     private TextWatcher cvcTextWatcher = new SimpleTextWatcher() {
 
@@ -150,12 +186,22 @@ public class DonationFragment extends BaseFragment {
             if (s.length() == 3) {
                 cardholderName.requestFocus();
             }
+            viewModel.setCvc(s.toString());
+        }
+    };
+
+    /*
+     * Text watcher that updates the view model when the cardholder name value changes
+     */
+    private TextWatcher cardholderNameTextWatcher = new SimpleTextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            viewModel.setCardholderName(s.toString());
         }
     };
 
     /*
      * Editor action listener that hides soft keyboard when the user clicks on done action button
-     * and propagates the cardholder name value to the view model
      */
     private TextView.OnEditorActionListener editorListener = (v, actionId, event) -> {
         if (actionId == EditorInfo.IME_ACTION_DONE) {

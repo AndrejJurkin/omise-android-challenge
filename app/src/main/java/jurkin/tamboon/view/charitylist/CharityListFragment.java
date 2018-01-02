@@ -1,10 +1,8 @@
 package jurkin.tamboon.view.charitylist;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProvider;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,16 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import jurkin.tamboon.R;
-import jurkin.tamboon.model.Charity;
-import jurkin.tamboon.model.Donation;
 import jurkin.tamboon.view.BaseFragment;
 import jurkin.tamboon.view.donation.DonationActivity;
 
@@ -33,21 +26,12 @@ public class CharityListFragment extends BaseFragment {
 
     private static final String TAG = "CharityListFragment";
 
-    @Inject
-    ViewModelProvider.Factory viewModelFactory;
-
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     private CharityListViewModel viewModel;
 
     private CharityAdapter adapter;
-
-    @Override
-    public void onAttach(Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,8 +100,15 @@ public class CharityListFragment extends BaseFragment {
     }
 
     private void bindAdapterClickListener() {
-        this.adapter.setOnItemClickListener(charity ->
-                DonationActivity.start(getActivity(), charity));
+        this.adapter.setOnItemClickListener((charity, charityImage, charityName) -> {
+            final String transitionImage = getString(R.string.transition_charity_image);
+            final String transitionName = getString(R.string.transition_charity_name);
+
+            DonationActivity.start(getActivity(), charity,
+                    new Pair<>(charityImage, transitionImage),
+                    new Pair<>(charityName, transitionName)
+            );
+        });
     }
 
     private void stopLoading() {

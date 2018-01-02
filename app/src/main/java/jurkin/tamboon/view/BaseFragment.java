@@ -20,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public abstract class BaseFragment extends Fragment {
 
     /**
-     * Dispose bag for the subscriptions. All subscriptions will are disposed onStop.
+     * Dispose bag for the subscriptions. All subscriptions will be disposed onStop.
      */
     protected CompositeDisposable disposables;
 

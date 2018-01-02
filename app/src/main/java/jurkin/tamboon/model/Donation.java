@@ -1,6 +1,8 @@
 package jurkin.tamboon.model;
 
 /**
+ * Donation model class used to serialize / deserialize the related JSON objects
+ *
  * Created by Andrej Jurkin on 12/21/17.
  */
 

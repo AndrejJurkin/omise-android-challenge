@@ -21,21 +21,35 @@ import jurkin.tamboon.R;
 import jurkin.tamboon.model.Charity;
 
 /**
+ * Charity adapter takes a list of charity objects and displays them in the recycler view.
+ *
+ * The CharityAdapter will display an empty list if data set is null or empty.
+ *
  * Created by Andrej Jurkin on 12/22/17.
  */
 
 class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHolder> {
 
     /**
-     * The item view callback interface
+     * The item view click callback interface.
      */
     interface OnItemClickListener {
-        void onItemClick(Charity charity);
+        /**
+         * @param charity The Charity object associated with the clicked item
+         * @param charityImage The charity image view, used for the shared element transition
+         * @param charityName The charity name view, used for the shared element transition
+         */
+        void onItemClick(Charity charity, View charityImage, View charityName);
     }
 
-    @NonNull
+    /**
+     * The charity list data that will be displayed in the recycler view
+     */
     private List<Charity> data;
 
+    /**
+     * On item click listener that is notified on item view clicks
+     */
     @Nullable
     private OnItemClickListener onItemClickListener;
 
@@ -63,7 +77,7 @@ class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHolder> {
 
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(charity);
+                onItemClickListener.onItemClick(charity, holder.charityImage, holder.charityName);
             }
         });
     }
@@ -74,9 +88,9 @@ class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHolder> {
     }
 
     /**
-     * Update adapter data and notify changes
+     * Update adapter data and notify changes.
      *
-     * @param data The new charity data
+     * @param data The new charity data, it can be null or empty
      */
     public void setData(@Nullable List<Charity> data) {
         if (data == null) {
@@ -87,7 +101,7 @@ class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHolder> {
         this.notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
 
@@ -102,7 +116,7 @@ class CharityAdapter extends RecyclerView.Adapter<CharityAdapter.ViewHolder> {
         @BindView(R.id.donate_button)
         Button donateButton;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

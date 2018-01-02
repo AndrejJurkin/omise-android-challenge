@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * Charity model class used to serialize / deserialize related JSON objects
+ *
  * Created by Andrej Jurkin on 12/21/17.
  */
 

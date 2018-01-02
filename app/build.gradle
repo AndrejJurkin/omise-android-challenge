@@ -39,6 +39,7 @@ dependencies {
     })
 
     testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:2.1.0"
 
     // Android support dependencies
     compile 'com.android.support:cardview-v7:' + SUPPORT_VERSION
