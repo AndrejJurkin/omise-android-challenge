@@ -97,11 +97,9 @@ public class DonationViewModel extends ViewModel {
                         repo.donate(donation))
                 .subscribe(
                         onSuccess -> {
-                            Log.d(TAG, "donate: Transaction complete");
                             this.viewModelState.onNext(ViewModelState.Loaded);
                         },
                         throwable -> {
-                            Log.e(TAG, "donate: Transaction failed", throwable);
                             this.viewModelState.onNext(ViewModelState.Error);
                         });
     }
