@@ -262,6 +262,7 @@ public class DonationFragment extends BaseFragment {
                 .setTitle(getString(R.string.success))
                 .setPositiveButton(getString(R.string.dismiss),
                         (dialog, which) -> getActivity().finish())
+                .setMessage(getString(R.string.transaction_success))
                 .create()
                 .show();
     }

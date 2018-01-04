@@ -150,8 +150,8 @@ public class DonationViewModel extends ViewModel {
     }
 
     /*
-         * Very simple validation, just for the test purposes
-         */
+     * Very simple validation, just for the test purposes
+     */
     @VisibleForTesting
     boolean isCreditCardModelValid() {
 
