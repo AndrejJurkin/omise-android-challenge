@@ -6,6 +6,7 @@ import io.reactivex.Observable;
 import jurkin.tamboon.model.Charity;
 
 import jurkin.tamboon.model.Donation;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 
@@ -20,6 +21,6 @@ public interface OmiseService {
     @GET("charities")
     Observable<List<Charity>> getCharities();
 
-    @POST("donation")
-    Observable<Void> donate(Donation donation);
+    @POST("donations")
+    Observable<Void> donate(@Body Donation donation);
 }

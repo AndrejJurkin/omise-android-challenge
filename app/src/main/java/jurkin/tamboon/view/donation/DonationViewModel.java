@@ -2,6 +2,7 @@ package jurkin.tamboon.view.donation;
 
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -11,12 +12,14 @@ import io.reactivex.subjects.PublishSubject;
 import jurkin.tamboon.api.Repository;
 import jurkin.tamboon.model.Charity;
 import jurkin.tamboon.model.Donation;
+import jurkin.tamboon.view.ViewModelState;
 
 /**
  * Created by Andrej Jurkin on 12/29/17.
  */
 
 public class DonationViewModel extends ViewModel {
+    private static final String TAG = "DonationViewModel";
 
     private Charity charity;
 
@@ -34,10 +37,13 @@ public class DonationViewModel extends ViewModel {
 
     private PublishSubject<Boolean> isDonationButtonEnabled;
 
+    private PublishSubject<ViewModelState> viewModelState;
+
     @Inject
     public DonationViewModel(Repository repository) {
         this.repo = repository;
         this.isDonationButtonEnabled = PublishSubject.create();
+        this.viewModelState = PublishSubject.create();
     }
 
     /**
@@ -75,9 +81,29 @@ public class DonationViewModel extends ViewModel {
      * send it to the remote serer.
      */
     public void donate() {
-        this.repo.getToken(createTokenRequest())
+        this.isDonationButtonEnabled.onNext(false);
+        this.viewModelState.onNext(ViewModelState.Loading);
+        this.repo
+                // Send token request to the Omise API, this call will always fail, because
+                // we're working with dummy data
+                .getToken(createTokenRequest())
                 .map(token -> new Donation(token.card.name, token.id, amount))
-                .flatMap(donation -> repo.donate(donation));
+                // Since we are in the test mode, the Omise API will always fail to return a token
+                // so for the test purposes I've added this line to continue with the flow
+                // even though we should stop at the first step
+                .onErrorReturn(throwable ->
+                        new Donation(cardholderName, "dummy_token", amount))
+                .flatMap(donation ->
+                        repo.donate(donation))
+                .subscribe(
+                        onSuccess -> {
+                            Log.d(TAG, "donate: Transaction complete");
+                            this.viewModelState.onNext(ViewModelState.Loaded);
+                        },
+                        throwable -> {
+                            Log.e(TAG, "donate: Transaction failed", throwable);
+                            this.viewModelState.onNext(ViewModelState.Error);
+                        });
     }
 
     public void setAmount(String amount) {
@@ -119,9 +145,13 @@ public class DonationViewModel extends ViewModel {
         this.isDonationButtonEnabled.onNext(isCreditCardModelValid());
     }
 
+    public Observable<ViewModelState> getViewModelState() {
+        return viewModelState;
+    }
+
     /*
-     * Very simple validation, just for the test purposes
-     */
+         * Very simple validation, just for the test purposes
+         */
     @VisibleForTesting
     boolean isCreditCardModelValid() {
 

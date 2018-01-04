@@ -9,5 +9,9 @@
     <string name="expiry_date">Expiry Date</string>
     <string name="cvc_number">CVC</string>
     <string name="cardholder_name">Cardholder Name</string>
-
+    <string name="please_wait">Please wait</string>
+    <string name="transaction_is_processing">Your transaction is being processed</string>
+    <string name="success">Success</string>
+    <string name="transaction_success">Your transaction has been successful</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

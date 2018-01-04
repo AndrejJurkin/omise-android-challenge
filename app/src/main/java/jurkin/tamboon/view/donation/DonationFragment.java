@@ -1,8 +1,12 @@
 package jurkin.tamboon.view.donation;
 
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.omise.android.ui.CreditCardEditText;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import jurkin.tamboon.R;
 import jurkin.tamboon.util.SimpleTextWatcher;
@@ -64,6 +69,8 @@ public class DonationFragment extends BaseFragment {
 
     private DonationViewModel viewModel;
 
+    private ProgressDialog progressDialog;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,17 +112,47 @@ public class DonationFragment extends BaseFragment {
         cvc.addTextChangedListener(cvcTextWatcher);
         cardholderName.addTextChangedListener(cardholderNameTextWatcher);
         cardholderName.setOnEditorActionListener(editorListener);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         Disposable donateButtonSubscription = viewModel.isDonateButtonEnabled()
                 .subscribe(enabled -> this.donateButton.setEnabled(enabled));
         disposables.add(donateButtonSubscription);
-    }
 
+        bindViewModelState();
+    }
 
     @SuppressWarnings("unused")
     @OnClick(R.id.donate_button)
     public void onDonationButtonClick() {
-        this.viewModel.donate();
+        root.requestFocus();
+        closeSoftInput();
+        viewModel.donate();
+
+    }
+
+    private void bindViewModelState() {
+        Disposable subscription = viewModel.getViewModelState()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(viewModelState -> {
+                    switch (viewModelState) {
+                        case Loading:
+                            showProgressIndicator();
+                            break;
+                        case Loaded:
+                            showTransactionSuccessful();
+                            break;
+                        case Error:
+                            // TODO: Show error view
+                            // Falls through
+                        default:
+                            break;
+                    }
+                });
+        disposables.add(subscription);
     }
 
     /*
@@ -211,4 +248,21 @@ public class DonationFragment extends BaseFragment {
         }
         return false;
     };
+
+    private void showProgressIndicator() {
+        this.progressDialog = ProgressDialog.show(getContext(),
+                getString(R.string.please_wait),
+                getString(R.string.transaction_is_processing));
+    }
+
+    private void showTransactionSuccessful() {
+        this.progressDialog.dismiss();
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.success))
+                .setPositiveButton(getString(R.string.dismiss),
+                        (dialog, which) -> getActivity().finish())
+                .create()
+                .show();
+    }
 }

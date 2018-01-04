@@ -1,5 +1,7 @@
 package jurkin.tamboon.api;
 
+import android.util.Log;
+
 import java.util.List;
 
 import co.omise.android.Client;
@@ -18,6 +20,7 @@ import jurkin.tamboon.model.Donation;
  */
 
 public class Repository {
+    private static final String TAG = "Repository";
 
     private OmiseService omiseService;
 
@@ -52,7 +55,7 @@ public class Repository {
      * @return Empty observable
      */
     public Observable<Void> donate(Donation donation) {
-        return this.donate(donation);
+        return this.omiseService.donate(donation);
     }
 
     /**
